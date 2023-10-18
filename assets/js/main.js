@@ -240,3 +240,42 @@
   });
 
 })()
+
+function submitForm(e) {
+  e.preventDefault();
+
+  // Get the form element
+  const form = document.querySelector('.php-email-form');
+
+  // Show loading and hide other messages
+  document.querySelector('.loading').style.display = 'block';
+  document.querySelector('.error-message').style.display = 'none';
+  document.querySelector('.sent-message').style.display = 'none';
+
+  // Create a new FormData object from the form
+  const formData = new FormData(form);
+
+  // Use the Fetch API to send the form data
+  fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: {
+          'Accept': 'application/json'
+      }
+  })
+  .then(response => response.json())
+  .then(data => {
+      document.querySelector('.loading').style.display = 'none';
+      if (data.ok) {
+          document.querySelector('.sent-message').style.display = 'block';
+      } else {
+          document.querySelector('.error-message').innerText = "There was an error sending the email.";
+          document.querySelector('.error-message').style.display = 'block';
+      }
+  })
+  .catch(() => {
+      document.querySelector('.loading').style.display = 'none';
+      document.querySelector('.error-message').innerText = "There was an error sending the email.";
+      document.querySelector('.error-message').style.display = 'block';
+  });
+}
